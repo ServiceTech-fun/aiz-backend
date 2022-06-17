@@ -39,8 +39,10 @@ def index():
 def get_land():
     if request.method == "GET":
         key = request.args.get("key","")
+        val = request.args.get("val","")
     elif request.method == "POST":
         key = request.form['key']
+        val = request.form['val']
     if key == 'ALL' or key == 'all':
         client = mongo_aba_init()
         db = client.abandonment
@@ -51,6 +53,24 @@ def get_land():
             tmp["_id"] = str(tmp["_id"])
             q_list.append(tmp)
         return(jsonify(q_list))
+    else:
+        client = mongo_aba_init()
+        db = client.abandonment
+        coll = db.land
+        if key == '_id':
+            search_tgt = {key : ObjectId(val)}
+            search_land = coll.find_one(search_tgt)
+            search_land["_id"] = str(search_land["_id"])
+            return(jsonify(search_land))
+        else:
+            search_tgt = {key : val}
+            search_land = coll.find(search_tgt)
+            q_list = []
+            for tmp in search_land:
+                tmp["_id"] = str(tmp["_id"])
+                q_list.append(tmp)
+            return(jsonify(q_list))
+
 
 @app.route('/manage', methods=['POST','GET'])
 def get_manage():
@@ -103,7 +123,7 @@ def get_user():
             return(jsonify(search_user))
         else:
             search_tgt = {key : val}
-            search_user = coll.find_one(search_tgt)
+            search_user = coll.find(search_tgt)
             q_list = []
             for tmp in search_user:
                 tmp["_id"] = str(tmp["_id"])
