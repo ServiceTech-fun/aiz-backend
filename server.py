@@ -29,54 +29,59 @@ def index():
     coll = db.land
     sample = coll.find()
     q_list = []
-    for i, tmp in enumerate(sample):
-        del tmp["_id"]
+    for tmp in sample:
+        tmp["_id"] = str(tmp["_id"])
         q_list.append(tmp)
     return(jsonify(q_list))
 
-@app.route('/hello')
-def hello():
-    return 'Hello, World'
-
-@app.route('/land', methods=['POST'])
+@app.route('/land', methods=['POST','GET'])
 def get_land():
-    key = request.form['key']
-    val = request.form['value']
+    if request.method == "GET":
+        key = request.args.get("key","")
+    elif request.method == "POST":
+        key = request.form['key']
     if key == 'ALL' or key == 'all':
         client = mongo_aba_init()
         db = client.abandonment
         coll = db.land
         all_land = coll.find()
+        q_list = []
         for tmp in all_land:
-            del tmp["_id"]
+            tmp["_id"] = str(tmp["_id"])
             q_list.append(tmp)
         return(jsonify(q_list))
 
-@app.route('/manage', methods=['POST'])
+@app.route('/manage', methods=['POST','GET'])
 def get_manage():
-    key = request.form['key']
-    val = request.form['value']
+    if request.method == "GET":
+        key = request.args.get("key","")
+    elif request.method == "POST":
+        key = request.form['key']
     if key == 'ALL' or key == 'all':
         client = mongo_aba_init()
         db = client.abandonment
         coll = db.manage
         all_manage = coll.find()
+        q_list = []
         for tmp in all_manage:
-            del tmp["_id"]
+            tmp["_id"] = str(tmp["_id"])
             q_list.append(tmp)
         return(jsonify(q_list))
 
-@app.route('/user', methods=['POST'])
+@app.route('/user', methods=['POST','GET'])
 def get_user():
-    key = request.form['key']
-    val = request.form['value']
+    if request.method == "GET":
+        key = request.args.get("key","")
+    elif request.method == "POST":
+        key = request.form['key']
     if key == 'ALL' or key == 'all':
         client = mongo_aba_init()
         db = client.abandonment
         coll = db.land
         all_user = coll.find()
+        q_list = []
         for tmp in all_user:
-            del tmp["_id"]
+            tmp["_id"] = str(tmp["_id"])
             q_list.append(tmp)
         return(jsonify(q_list))
 
